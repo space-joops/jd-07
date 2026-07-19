@@ -1,0 +1,17 @@
+{
+  "name": "Astropet",
+  "short_name": "Astropet",
+  "description": "우주 쓰레기를 청소하는 귀여운 우주 펫",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
