@@ -1,6 +1,93 @@
-import { Rocket, Map as MapIcon, ShoppingBag, User } from 'lucide-react';
+"use client";
+
+import { useState } from "react";
+import { Rocket, Map as MapIcon, ShoppingBag, User, Loader2 } from "lucide-react";
 
 export default function Home() {
+  // State to determine if the user has completed onboarding
+  const [hasPet, setHasPet] = useState(false);
+  
+  // Onboarding states
+  const [inviteCode, setInviteCode] = useState("");
+  const [isHatching, setIsHatching] = useState(false);
+
+  const handleHatch = () => {
+    if (inviteCode.trim().length < 4) return;
+    setIsHatching(true);
+    
+    // Simulate network delay and hatching animation
+    setTimeout(() => {
+      setHasPet(true);
+    }, 2500);
+  };
+
+  // ----------------------------------------------------
+  // ONBOARDING SCREEN
+  // ----------------------------------------------------
+  if (!hasPet) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-white font-sans relative overflow-hidden flex flex-col items-center justify-center px-6">
+        {/* Background */}
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-950 to-slate-950 -z-10"></div>
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 pointer-events-none mix-blend-screen"></div>
+
+        <div className="z-10 flex flex-col items-center w-full max-w-sm">
+          <h1 className="text-sm font-semibold tracking-[0.3em] text-cyan-400 mb-12 text-center uppercase">
+            Astropet Protocol
+          </h1>
+
+          {/* Glowing Egg / Capsule */}
+          <div className="relative w-48 h-64 mb-12 flex items-center justify-center">
+            {/* Glow effect */}
+            <div className={`absolute inset-0 bg-blue-500/30 rounded-full blur-3xl transition-all duration-700 ${isHatching ? 'bg-cyan-400/60 scale-150' : 'animate-pulse'}`}></div>
+            {/* The Egg */}
+            <div className={`text-9xl relative z-10 transition-transform duration-100 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] ${isHatching ? 'animate-bounce scale-110' : 'animate-pulse'}`}>
+              🥚
+            </div>
+          </div>
+
+          <div className="w-full bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl shadow-2xl transition-all duration-500">
+            <h2 className="text-xl font-bold text-center mb-2">초대 코드가 필요합니다</h2>
+            <p className="text-slate-400 text-xs text-center mb-6">
+              아스트로펫 알을 부화시키려면<br />기존 대원에게 받은 분양 코드를 입력하세요.
+            </p>
+
+            <input
+              type="text"
+              value={inviteCode}
+              onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+              placeholder="A S T R O - 0 0 0"
+              disabled={isHatching}
+              className="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-4 text-center text-xl font-mono tracking-widest focus:outline-none focus:border-cyan-400 transition-colors mb-4 disabled:opacity-50"
+            />
+
+            <button
+              onClick={handleHatch}
+              disabled={inviteCode.length < 4 || isHatching}
+              className={`w-full py-4 rounded-xl font-bold tracking-widest text-sm flex items-center justify-center transition-all duration-300 ${
+                inviteCode.length >= 4 && !isHatching
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_20px_rgba(6,182,212,0.4)] text-white'
+                  : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+              }`}
+            >
+              {isHatching ? (
+                <>
+                  <Loader2 className="animate-spin mr-2" size={18} />
+                  HATCHING...
+                </>
+              ) : (
+                '부화 시작 (HATCH)'
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // MAIN DASHBOARD SCREEN (Existing UI)
+  // ----------------------------------------------------
   return (
     <div className="min-h-screen bg-slate-950 text-white font-sans relative overflow-hidden flex flex-col">
       {/* Background elements */}
@@ -20,19 +107,18 @@ export default function Home() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col items-center justify-start mt-8 px-6 z-10 w-full max-w-md mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-start mt-8 px-6 z-10 w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
         
         {/* Pet Placeholder & Planet Glow */}
         <div className="relative w-64 h-64 mb-8 flex items-center justify-center">
            {/* Planet glowing arc */}
            <div className="absolute bottom-[-20px] w-[180%] h-40 bg-blue-500/20 rounded-t-[100%] blur-3xl"></div>
-           {/* Pet character (placeholder for 3D model / image) */}
+           {/* Pet character */}
            <div className="text-9xl relative z-10 animate-bounce drop-shadow-[0_0_30px_rgba(56,189,248,0.5)]">👽</div>
         </div>
 
         {/* Timer Card (Glassmorphism) */}
         <div className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[2rem] p-6 mb-5 shadow-2xl relative overflow-hidden">
-          {/* Subtle gradient overlay for the glass card */}
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
           
           <div className="relative z-10 flex flex-col items-center">
