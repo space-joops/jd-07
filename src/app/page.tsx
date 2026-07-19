@@ -12,6 +12,7 @@ export default function Home() {
   // Onboarding states
   const [inviteCode, setInviteCode] = useState("");
   const [isHatching, setIsHatching] = useState(false);
+  const [activeTab, setActiveTab] = useState("home");
 
   // Timer & AR states
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
@@ -153,55 +154,163 @@ export default function Home() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col items-center justify-start mt-8 px-6 z-10 w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
-        
-        {/* Pet Placeholder & Planet Glow */}
-        <div className="relative w-64 h-64 mb-8 flex items-center justify-center">
-           {/* Planet glowing arc */}
-           <div className="absolute bottom-[-20px] w-[180%] h-40 bg-blue-500/20 rounded-t-[100%] blur-3xl"></div>
-           {/* Pet character */}
-           <div className="text-9xl relative z-10 animate-bounce drop-shadow-[0_0_30px_rgba(56,189,248,0.5)]">👽</div>
-        </div>
-
-        {/* Timer Card (Glassmorphism) */}
-        <div className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[2rem] p-6 mb-5 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+      {activeTab === "home" && (
+        <main className="flex-1 flex flex-col items-center justify-start mt-8 px-6 z-10 w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-24">
           
-          <div className="relative z-10 flex flex-col items-center">
-            <p className="text-center text-slate-300 text-xs mb-2 font-semibold tracking-[0.2em] uppercase">Next Orbit In</p>
-            <h2 className="text-center text-[3.5rem] leading-none font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 mb-3 drop-shadow-sm">
-              {m}<span className="text-3xl">M</span> {s.toString().padStart(2, '0')}<span className="text-3xl">S</span>
-            </h2>
-            <p className="text-center text-slate-400 text-sm">Countdown to space adventure!</p>
+          {/* Pet Placeholder & Planet Glow */}
+          <div className="relative w-64 h-64 mb-8 flex items-center justify-center">
+             {/* Planet glowing arc */}
+             <div className="absolute bottom-[-20px] w-[180%] h-40 bg-blue-500/20 rounded-t-[100%] blur-3xl"></div>
+             {/* Pet character */}
+             <div className="text-9xl relative z-10 animate-bounce drop-shadow-[0_0_30px_rgba(56,189,248,0.5)]">👽</div>
           </div>
-        </div>
 
-        {/* Status Card */}
-        <div className="w-full bg-slate-900/60 backdrop-blur-md border border-white/5 rounded-3xl p-6 mb-24 shadow-xl">
-          <div className="flex justify-between items-start mb-5">
-            <div>
-              <p className="text-slate-500 text-xs font-semibold mb-1">PET STATUS</p>
-              <h3 className="text-2xl font-bold text-slate-100 tracking-tight">Nova <span className="text-sm font-normal text-slate-400 ml-1">Lvl 14</span></h3>
-            </div>
-            <div className="text-right flex flex-col gap-1">
-              <div className="text-sm text-slate-400"><span className="inline-block w-20 text-left">Health:</span> <span className="text-white font-semibold text-right inline-block w-10">92%</span></div>
-              <div className="text-sm text-slate-400"><span className="inline-block w-20 text-left">Happiness:</span> <span className="text-white font-semibold text-right inline-block w-10">100%</span></div>
+          {/* Timer Card (Glassmorphism) */}
+          <div className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[2rem] p-6 mb-5 shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+            
+            <div className="relative z-10 flex flex-col items-center">
+              <p className="text-center text-slate-300 text-xs mb-2 font-semibold tracking-[0.2em] uppercase">Next Orbit In</p>
+              <h2 className="text-center text-[3.5rem] leading-none font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 mb-3 drop-shadow-sm">
+                {m}<span className="text-3xl">M</span> {s.toString().padStart(2, '0')}<span className="text-3xl">S</span>
+              </h2>
+              <p className="text-center text-slate-400 text-sm">Countdown to space adventure!</p>
             </div>
           </div>
-          
-          <div className="mt-2">
-             <div className="flex justify-between text-xs text-slate-300 mb-2 font-medium">
-               <span>Explore Moon Crater</span>
-               <span className="text-cyan-400">68%</span>
-             </div>
-             <div className="w-full bg-slate-800/80 rounded-full h-3 overflow-hidden border border-slate-700">
-                <div className="bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-400 h-full rounded-full relative" style={{ width: '68%' }}>
-                  <div className="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite]"></div>
+
+          {/* Status Card */}
+          <div className="w-full bg-slate-900/60 backdrop-blur-md border border-white/5 rounded-3xl p-6 mb-4 shadow-xl">
+            <div className="flex justify-between items-start mb-5">
+              <div>
+                <p className="text-slate-500 text-xs font-semibold mb-1">PET STATUS</p>
+                <h3 className="text-2xl font-bold text-slate-100 tracking-tight">Nova <span className="text-sm font-normal text-slate-400 ml-1">Lvl 14</span></h3>
+              </div>
+              <div className="text-right flex flex-col gap-1">
+                <div className="text-sm text-slate-400"><span className="inline-block w-20 text-left">Health:</span> <span className="text-white font-semibold text-right inline-block w-10">92%</span></div>
+                <div className="text-sm text-slate-400"><span className="inline-block w-20 text-left">Happiness:</span> <span className="text-white font-semibold text-right inline-block w-10">100%</span></div>
+              </div>
+            </div>
+            
+            <div className="mt-2">
+               <div className="flex justify-between text-xs text-slate-300 mb-2 font-medium">
+                 <span>Explore Moon Crater</span>
+                 <span className="text-cyan-400">68%</span>
+               </div>
+               <div className="w-full bg-slate-800/80 rounded-full h-3 overflow-hidden border border-slate-700">
+                  <div className="bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-400 h-full rounded-full relative" style={{ width: '68%' }}>
+                    <div className="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite]"></div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </main>
+      )}
+
+      {activeTab === "orbit" && (
+        <main className="flex-1 flex flex-col items-center justify-start mt-8 px-6 z-10 w-full max-w-md mx-auto animate-in fade-in zoom-in-95 duration-500 pb-24">
+          <div className="w-full bg-slate-900/60 backdrop-blur-md border border-white/5 rounded-3xl p-6 mb-8 shadow-xl flex flex-col items-center">
+            <h2 className="text-xl font-bold text-cyan-400 mb-8 tracking-widest uppercase">Orbit Tracker</h2>
+            
+            {/* Radar / Orbit Visual */}
+            <div className="relative w-64 h-64 rounded-full border border-slate-700/50 flex items-center justify-center mb-8">
+              {/* Inner rings */}
+              <div className="absolute w-48 h-48 rounded-full border border-dashed border-slate-600/50"></div>
+              <div className="absolute w-32 h-32 rounded-full border border-slate-500/50 bg-slate-800/30 flex items-center justify-center shadow-[0_0_50px_rgba(59,130,246,0.2)]">
+                <span className="text-5xl">🌍</span>
+              </div>
+              
+              {/* Orbiting Pet */}
+              <div className="absolute w-full h-full animate-[spin_10s_linear_infinite]">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-slate-900 border border-cyan-400 rounded-full flex items-center justify-center shadow-[0_0_15px_#22d3ee]">
+                  <span className="text-sm">👽</span>
                 </div>
-             </div>
+              </div>
+            </div>
+
+            {/* Info */}
+            <div className="w-full flex justify-between items-center px-4 py-3 bg-slate-800/50 rounded-2xl mb-3">
+              <div className="text-sm font-semibold text-slate-300">Space Debris</div>
+              <div className="text-lg font-bold text-cyan-300">1,420 kg</div>
+            </div>
+            <div className="w-full flex justify-between items-center px-4 py-3 bg-slate-800/50 rounded-2xl">
+              <div className="text-sm font-semibold text-slate-300">Current Zone</div>
+              <div className="text-sm font-bold text-purple-400">Low Earth Orbit</div>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      )}
+
+      {activeTab === "craft" && (
+        <main className="flex-1 flex flex-col items-center justify-start mt-8 px-6 z-10 w-full max-w-md mx-auto animate-in fade-in zoom-in-95 duration-500 pb-24">
+          
+          <div className="w-full flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-cyan-400 tracking-widest uppercase">Craft Station</h2>
+            <div className="bg-slate-800/80 border border-slate-700 px-4 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
+              <span className="text-sm">⚙️</span>
+              <span className="text-cyan-300 font-bold text-sm tracking-wide">1,420 kg</span>
+            </div>
+          </div>
+
+          <p className="text-slate-400 text-sm mb-6 text-center">
+            수집한 우주 쓰레기를 재활용하여<br/>펫의 장비나 간식을 제작할 수 있습니다.
+          </p>
+
+          <div className="w-full flex flex-col gap-4">
+            
+            {/* Craft Item 1 */}
+            <div className="w-full bg-slate-900/60 backdrop-blur-md border border-white/5 rounded-2xl p-4 flex gap-4 items-center shadow-lg transition-all hover:border-cyan-400/50 group cursor-pointer">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-purple-500/30 rounded-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition-transform">
+                🕸️
+              </div>
+              <div className="flex-1">
+                <h4 className="text-slate-100 font-bold mb-1 text-sm tracking-wide">레이저 그물망</h4>
+                <p className="text-slate-500 text-[11px] leading-tight mb-2">우주 쓰레기 자동 수집 효율 +15% 증가</p>
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400">
+                  <span>⚙️</span> 500 kg
+                </div>
+              </div>
+              <button className="w-10 h-10 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-400 flex items-center justify-center hover:bg-cyan-500 hover:text-white hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all">
+                +
+              </button>
+            </div>
+
+            {/* Craft Item 2 */}
+            <div className="w-full bg-slate-900/60 backdrop-blur-md border border-white/5 rounded-2xl p-4 flex gap-4 items-center shadow-lg transition-all hover:border-pink-400/50 group cursor-pointer">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-500/20 to-rose-500/20 border border-rose-500/30 rounded-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition-transform">
+                🍖
+              </div>
+              <div className="flex-1">
+                <h4 className="text-slate-100 font-bold mb-1 text-sm tracking-wide">고급 영양 간식</h4>
+                <p className="text-slate-500 text-[11px] leading-tight mb-2">다음 상공 통과 시, 교감 효율 3배 상승</p>
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400">
+                  <span>⚙️</span> 200 kg
+                </div>
+              </div>
+              <button className="w-10 h-10 rounded-full bg-pink-500/10 border border-pink-400/30 text-pink-400 flex items-center justify-center hover:bg-pink-500 hover:text-white hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all">
+                +
+              </button>
+            </div>
+
+            {/* Craft Item 3 */}
+            <div className="w-full bg-slate-900/60 backdrop-blur-md border border-white/5 rounded-2xl p-4 flex gap-4 items-center shadow-lg transition-all opacity-60 grayscale-[50%]">
+              <div className="w-16 h-16 bg-gradient-to-br from-slate-500/20 to-gray-500/20 border border-gray-500/30 rounded-xl flex items-center justify-center text-3xl shadow-inner">
+                🛡️
+              </div>
+              <div className="flex-1">
+                <h4 className="text-slate-100 font-bold mb-1 text-sm tracking-wide flex items-center gap-2">티타늄 장갑 <span className="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded uppercase font-bold tracking-widest">Locked</span></h4>
+                <p className="text-slate-500 text-[11px] leading-tight mb-2">태양풍으로부터 펫을 안전하게 보호합니다.</p>
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
+                  <span>⚙️</span> 1,200 kg
+                </div>
+              </div>
+              <button disabled className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 text-slate-600 flex items-center justify-center cursor-not-allowed">
+                +
+              </button>
+            </div>
+
+          </div>
+        </main>
+      )}
 
       {/* Golden Time Modal Overlay */}
       {isGoldenTime && (
@@ -268,19 +377,19 @@ export default function Home() {
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 w-full bg-slate-950/80 backdrop-blur-xl border-t border-white/5 pb-safe pt-3 z-50">
         <div className="flex justify-around items-center max-w-md mx-auto px-2 pb-5">
-          <NavItem icon={<Rocket strokeWidth={1.5} size={26} />} label="Home" active />
-          <NavItem icon={<MapIcon strokeWidth={1.5} size={26} />} label="Orbit" />
-          <NavItem icon={<ShoppingBag strokeWidth={1.5} size={26} />} label="Craft" />
-          <NavItem icon={<User strokeWidth={1.5} size={26} />} label="Profile" />
+          <NavItem icon={<Rocket strokeWidth={1.5} size={26} />} label="Home" active={activeTab === "home"} onClick={() => setActiveTab("home")} />
+          <NavItem icon={<MapIcon strokeWidth={1.5} size={26} />} label="Orbit" active={activeTab === "orbit"} onClick={() => setActiveTab("orbit")} />
+          <NavItem icon={<ShoppingBag strokeWidth={1.5} size={26} />} label="Craft" active={activeTab === "craft"} onClick={() => setActiveTab("craft")} />
+          <NavItem icon={<User strokeWidth={1.5} size={26} />} label="Profile" active={activeTab === "profile"} onClick={() => setActiveTab("profile")} />
         </div>
       </nav>
     </div>
   );
 }
 
-function NavItem({ icon, label, active = false }: { icon: React.ReactNode; label: string; active?: boolean }) {
+function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNode; label: string; active?: boolean; onClick?: () => void }) {
   return (
-    <button className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${active ? 'text-cyan-400 transform scale-110' : 'text-slate-500 hover:text-slate-300 hover:scale-105'}`}>
+    <button onClick={onClick} className={`flex flex-col items-center gap-1.5 transition-all duration-300 ${active ? 'text-cyan-400 transform scale-110' : 'text-slate-500 hover:text-slate-300 hover:scale-105'}`}>
       <div className={`p-1 rounded-xl ${active ? 'bg-cyan-400/10' : ''}`}>
         {icon}
       </div>
