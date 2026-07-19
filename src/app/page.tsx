@@ -33,6 +33,33 @@ export default function Home() {
     }
   }, [arMode]);
 
+  // PWA & Push Notification Setup
+  useEffect(() => {
+    // 1. Detect PWA installation and request notification permission
+    const handleAppInstalled = () => {
+      console.log('PWA was installed');
+      if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            new Notification('Astropet 설치 완료! 🚀', {
+              body: '앱 설치가 완료되었습니다. 이제 상공 통과 알림을 받을 수 있습니다!',
+            });
+          }
+        });
+      }
+    };
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    // 2. Auto-update on new deployment (Service Worker controller change)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+         window.location.reload();
+      });
+    }
+
+    return () => window.removeEventListener('appinstalled', handleAppInstalled);
+  }, []);
+
   useEffect(() => {
     if (!hasPet || isGoldenTime) return;
 
@@ -143,8 +170,11 @@ export default function Home() {
       {/* Header */}
       <header className="pt-12 px-6 flex justify-between items-center z-10">
         <div>
-          <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 tracking-tight">
+          <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 tracking-tight flex items-baseline gap-2">
             ASTROPET
+            <span className="text-[10px] text-cyan-500 font-mono font-bold tracking-widest border border-cyan-500/30 px-1.5 rounded-sm">
+              v{process.env.NEXT_PUBLIC_APP_VERSION || "0.1.0"}
+            </span>
           </h1>
           <p className="text-slate-400 text-sm mt-1 font-medium">Level 12 <span className="mx-2 opacity-50">|</span> Energy: 85%</p>
         </div>

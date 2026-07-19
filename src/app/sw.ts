@@ -19,3 +19,12 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+self.addEventListener('push', (event) => {
+  const data = event.data ? event.data.json() : { title: 'Astropet 알림', body: '새로운 이벤트가 발생했습니다!' };
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+    })
+  );
+});
