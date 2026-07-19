@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Rocket, Map as MapIcon, ShoppingBag, User, Loader2 } from "lucide-react";
 
 export default function Home() {
@@ -10,6 +10,50 @@ export default function Home() {
   // Onboarding states
   const [inviteCode, setInviteCode] = useState("");
   const [isHatching, setIsHatching] = useState(false);
+
+  // Timer & AR states
+  const [timeLeft, setTimeLeft] = useState(10 * 60 + 32); // 10m 32s in seconds
+  const [isGoldenTime, setIsGoldenTime] = useState(false);
+  const [arMode, setArMode] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // AR Camera initialization
+  useEffect(() => {
+    if (arMode && videoRef.current) {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(stream => {
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch(err => console.error("Error accessing camera:", err));
+    }
+  }, [arMode]);
+
+  useEffect(() => {
+    if (!hasPet || isGoldenTime) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsGoldenTime(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [hasPet, isGoldenTime]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return { m, s };
+  };
+
+  const { m, s } = formatTime(timeLeft);
 
   const handleHatch = () => {
     if (inviteCode.trim().length < 4) return;
@@ -124,7 +168,7 @@ export default function Home() {
           <div className="relative z-10 flex flex-col items-center">
             <p className="text-center text-slate-300 text-xs mb-2 font-semibold tracking-[0.2em] uppercase">Next Orbit In</p>
             <h2 className="text-center text-[3.5rem] leading-none font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 mb-3 drop-shadow-sm">
-              10<span className="text-3xl">M</span> 32<span className="text-3xl">S</span>
+              {m}<span className="text-3xl">M</span> {s.toString().padStart(2, '0')}<span className="text-3xl">S</span>
             </h2>
             <p className="text-center text-slate-400 text-sm">Countdown to space adventure!</p>
           </div>
@@ -156,6 +200,68 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Golden Time Modal Overlay */}
+      {isGoldenTime && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
+          
+          {/* AR Video Background */}
+          {arMode && (
+            <video 
+              ref={videoRef}
+              autoPlay 
+              playsInline 
+              className="absolute inset-0 w-full h-full object-cover z-0"
+            />
+          )}
+
+          {!arMode ? (
+            <div className="bg-slate-900 border border-cyan-400/50 rounded-3xl p-8 max-w-sm w-full shadow-[0_0_60px_rgba(6,182,212,0.3)] flex flex-col items-center text-center relative z-10">
+              <div className="text-6xl mb-4 animate-bounce">🛸</div>
+              <h2 className="text-2xl font-bold text-cyan-400 mb-2">상공 진입! (Golden Time)</h2>
+              <p className="text-slate-300 text-sm mb-6 leading-relaxed">
+                아스트로펫이 지금 내 상공을 통과 중입니다!<br/>지금 간식을 주면 유대감이 <span className="text-cyan-300 font-bold">2배</span>로 상승합니다.
+              </p>
+              <button 
+                onClick={() => setArMode(true)}
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.5)] flex items-center justify-center gap-2"
+              >
+                <span>AR 카메라 켜고 간식 주기</span> 🥩
+              </button>
+              <button 
+                onClick={() => {
+                  setIsGoldenTime(false);
+                  setTimeLeft(10 * 60 + 32);
+                }}
+                className="mt-4 text-slate-500 text-xs hover:text-slate-400 underline"
+              >
+                나중에 주기
+              </button>
+            </div>
+          ) : (
+            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-10 w-full px-6">
+              {/* Virtual Pet floating in AR */}
+              <div className="text-9xl mb-12 animate-bounce drop-shadow-[0_0_30px_rgba(255,255,255,0.8)]">👽</div>
+              
+              <button 
+                onClick={() => {
+                  setIsGoldenTime(false);
+                  setArMode(false);
+                  setTimeLeft(10 * 60 + 32);
+                  // Stop video stream
+                  if (videoRef.current && videoRef.current.srcObject) {
+                     const stream = videoRef.current.srcObject as MediaStream;
+                     stream.getTracks().forEach(track => track.stop());
+                  }
+                }}
+                className="w-full max-w-xs bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white font-bold py-4 rounded-full shadow-[0_0_40px_rgba(244,63,94,0.6)] animate-pulse border-2 border-white/50 text-lg tracking-wider"
+              >
+                간식 던지기!
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 w-full bg-slate-950/80 backdrop-blur-xl border-t border-white/5 pb-safe pt-3 z-50">
